@@ -4,25 +4,20 @@ PYTHON_VERSION=$(cat runtime.txt)
 # Install Python.
 if [ -f .heroku/python-version ]; then
   if [ ! $(cat .heroku/python-version) = $PYTHON_VERSION ]; then
-    bpwatch start uninstall_python
-      puts-step "Found $(cat .heroku/python-version), removing"
-      rm -fr .heroku/python
-    bpwatch stop uninstall_python
+    puts-step "Found $(cat .heroku/python-version), removing"
+    rm -fr .heroku/python
   else
     SKIP_INSTALL=1
   fi
 fi
 
 if [ ! $STACK = $CACHED_PYTHON_STACK ]; then
-  bpwatch start uninstall_python
-    rm -fr .heroku/python .heroku/python-stack .heroku/vendor
-    unset SKIP_INSTALL
-  bpwatch stop uninstall_python
+  rm -fr .heroku/python .heroku/python-stack .heroku/vendor
+  unset SKIP_INSTALL
 fi
 
 
 if [ ! "$SKIP_INSTALL" ]; then
-  bpwatch start install_python
     puts-step "Installing $PYTHON_VERSION"
 
     # Prepare destination directory.
@@ -35,8 +30,6 @@ if [ ! "$SKIP_INSTALL" ]; then
       exit 1
     fi
 
-  bpwatch stop install_python
-
   # Record for future reference.
   echo $PYTHON_VERSION > .heroku/python-version
   echo $STACK > .heroku/python-stack
@@ -46,32 +39,19 @@ if [ ! "$SKIP_INSTALL" ]; then
 fi
 
 # If Pip isn't up to date:
-if [ "$FRESH_PYTHON" ] || [[ ! $(pip --version) == *$PIP_VERSION* ]]; then
-  WORKING_DIR=$(pwd)
+if [ "$FRESH_PYTHON" ] || pip list -o --format=legacy --disable-pip-version-check | grep '^pip' 2>&1 /dev/null; then
 
-  bpwatch start prepare_environment
+  # TODO: automatically detect pip is out of date with 'pip list -o --format=legacy --disable-pip-version-check | grep '^pip''
+  WORKING_DIR=$(pwd)
 
   TMPTARDIR=$(mktemp -d)
   trap "rm -rf $TMPTARDIR" RETURN
 
-  bpwatch start install_setuptools
-    # Prepare it for the real world
-    # puts-step "Installing Setuptools ($SETUPTOOLS_VERSION)"
-    tar zxf $ROOT_DIR/vendor/setuptools-$SETUPTOOLS_VERSION.tar.gz -C $TMPTARDIR
-    cd $TMPTARDIR/setuptools-$SETUPTOOLS_VERSION/
-    python setup.py install &> /dev/null
-    cd $WORKING_DIR
-  bpwatch stop install_setuptoools
+  puts-step "Bootstrapping pip"
+  /app/.heroku/python/bin/python $ROOT_DIR/vendor/get-pip.py | indent
+  /app/.heroku/python/bin/pip install setuptools --upgrade &> /dev/null
 
-  bpwatch start install_pip
-    # puts-step "Installing Pip ($PIP_VERSION)"
-    tar zxf $ROOT_DIR/vendor/pip-$PIP_VERSION.tar.gz -C $TMPTARDIR
-    cd $TMPTARDIR/pip-$PIP_VERSION/
-    python setup.py install &> /dev/null
-    cd $WORKING_DIR
 
-  bpwatch stop install_pip
-  bpwatch stop prepare_environment
 fi
 
 set -e
