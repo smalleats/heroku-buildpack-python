@@ -1,5 +1,101 @@
 # Python Buildpack Changelog
 
+## 100
+
+Preliminary pipenv support.
+
+## 99
+
+Cleanup.
+
+## 98
+
+Official NLTK support and other improvements.
+
+- Support for `nltk.txt` file for declaring corpora to be downloaded.
+- Leading zeros for auto-set WEB_CONCURRENCY.
+
+## 97
+
+Improved egg-link functionality.
+
+## 96
+
+Bugfix.
+
+## 95
+
+Improved output support.
+
+## v94
+
+Improved support for PyPy.
+
+## v93
+
+Improved support for PyPy.
+
+## v92
+
+Improved cache functionality and fix egg-links regression.
+
+## v91
+
+Bugfix, rolled back to v88.
+
+## v90
+
+Bugfix.
+
+## v89
+
+Improved cache functionality and fix egg-links regression.
+
+## v88
+
+Fixed bug with editable pip installations.
+
+## v87
+
+Updated default Python 2.7.13.
+
+- Python 2.7.13 uses UCS-4 build, more compatibile with linux wheels.
+- Updated setuptools to v32.1.0.
+
+## v86
+
+Refactor and multi-buildpack compatibility.
+
+## v85
+
+Packaging fix.
+
+## v84
+
+Updated pip and setuptools.
+
+- Updated pip to v9.0.1.
+- Updated setuptools to v28.8.0.
+
+## v83
+
+Support for Heroku CI.
+
+- Cffi support for argon2
+
+## v82 (2016-08-22)
+
+Update to library detection mechnisms (pip-pop).
+
+- Updated setuptools to v25.5.0
+
+## v81 (2016-06-28)
+
+Updated default Python to 2.7.11.
+
+- Updated pip to v8.1.2.
+- Updated setuptools to v23.1.0.
+
 ## v80 (2016-04-05)
 
 Improved pip-pop compatibility with latest pip releases.
