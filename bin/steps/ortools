@@ -11,5 +11,5 @@
 if (pip-grep -s requirements.txt ortools &> /dev/null) then
   echo "-----> Installing or-tools"
 
-  (cd $ROOT_DIR/vendor/ortools ; /app/.heroku/python/bin/python setup.py install --prefix=/app/.heroku/python)
+  (cd $ROOT_DIR/vendor/ortools ; /app/.heroku/python/bin/python setup.py install --prefix=/app/.heroku/python &> /dev/null)
 fi
